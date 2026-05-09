@@ -1,70 +1,145 @@
 # Probie
 
-实时监测服务端点可连通性，帮助判断工具显示“正在重试”时，更像用户网络问题还是服务端/客户端问题。
+Realtime endpoint reachability monitoring for services, APIs, proxies, and network routes.
 
-## 使用
+Probie helps you answer a simple question: when a tool keeps retrying, is the target service reachable from this machine, or is the problem more likely local network, proxy/VPN, DNS, or upstream instability?
+
+## Install
+
+```bash
+npm install -g probie
+```
+
+For local development:
 
 ```bash
 npm install
 npm link
+```
+
+## Quick Start
+
+```bash
+probie setup
 probie watch
 ```
 
-同时监测 OpenAI 和 Anthropic：
+Enable system notifications for failures and recoveries:
 
 ```bash
-probie watch --profile openai --profile anthropic
+probie watch --notify
 ```
 
-内置 profile：
+Check once:
+
+```bash
+probie status
+```
+
+## Profiles
+
+Built-in profiles:
 
 ```text
 openai, anthropic, gemini, deepseek,
 openrouter, groq, mistral, xai, perplexity, together, cohere
 ```
 
-设置默认监控对象：
+Monitor specific profiles:
 
 ```bash
-probie setup
+probie watch --profile openai --profile anthropic
+```
+
+Save default profiles:
+
+```bash
 probie config set --profile openai --profile anthropic --interval 5
 probie config show
 ```
 
-调整超时和并发：
+Add a custom URL:
+
+```bash
+probie config add-url https://example.com/
+```
+
+## Configuration
+
+Tune timeouts and concurrency:
 
 ```bash
 probie config set --connect-timeout 6 --max-time 10 --confirm-connect-timeout 20 --confirm-max-time 30 --concurrency 3
 ```
 
-以后直接运行：
-
-```bash
-probie watch
-```
-
-添加 macOS 开机自启动：
+macOS autostart:
 
 ```bash
 probie install-autostart
-```
-
-取消自启动：
-
-```bash
 probie uninstall-autostart
 ```
 
-不可达时弹系统通知：
+## How It Decides
+
+- HTTP responses like `200`, `401`, `403`, `404`, and `405` count as reachable because the remote service responded.
+- Network failures, DNS failures, TLS timeouts, and connection timeouts count as unreachable.
+- VPN, system proxy, shell proxy, DNS, egress IP, country/region, and ASN are shown as context, not as the primary decision.
+- `--notify` sends notifications when a selected service becomes unreachable and when it recovers.
+
+## 中文说明
+
+Probie 用来实时监测服务端点可连通性，帮助判断工具显示“正在重试”时，更像用户网络问题，还是服务端/客户端问题。
+
+## 安装
+
+```bash
+npm install -g probie
+```
+
+本地开发：
+
+```bash
+npm install
+npm link
+```
+
+## 快速开始
+
+```bash
+probie setup
+probie watch
+```
+
+不可达和恢复时弹系统通知：
 
 ```bash
 probie watch --notify
 ```
 
-后台日志模式：
+查看一次状态：
 
 ```bash
-probie watch --notify --quiet
+probie status
+```
+
+## 内置平台
+
+```text
+openai, anthropic, gemini, deepseek,
+openrouter, groq, mistral, xai, perplexity, together, cohere
+```
+
+指定监控对象：
+
+```bash
+probie watch --profile openai --profile anthropic
+```
+
+保存默认配置：
+
+```bash
+probie config set --profile openai --profile anthropic --interval 5
+probie config show
 ```
 
 追加自定义 URL：
@@ -73,22 +148,24 @@ probie watch --notify --quiet
 probie config add-url https://example.com/
 ```
 
-单次 JSON：
+## 配置
+
+调整超时和并发：
 
 ```bash
-probie once
+probie config set --connect-timeout 6 --max-time 10 --confirm-connect-timeout 20 --confirm-max-time 30 --concurrency 3
 ```
 
-前台实时面板：
+macOS 开机自启动：
 
 ```bash
-probie watch
-probie watch --profile openai --profile anthropic
+probie install-autostart
+probie uninstall-autostart
 ```
 
 ## 判断逻辑
 
-- 所选服务都可连通：如果工具仍重试，更像客户端或服务端短时问题。
-- 部分服务可连通：更像 DNS、规则、节点或上游局部波动。
-- 都不可连通：更像本机网络、代理/VPN、DNS 或节点问题。
-- VPN、系统代理、Shell 代理只作为辅助信息展示，不作为核心判断。
+- `200`、`401`、`403`、`404`、`405` 等 HTTP 响应都算可达，因为目标服务已经响应。
+- DNS 失败、TLS 超时、连接超时、网络错误算不可达。
+- VPN、系统代理、Shell 代理、DNS、出口 IP、国家/地区、ASN 只作为辅助信息展示，不作为核心判断。
+- `--notify` 会在服务不可达和恢复时都发送通知。
