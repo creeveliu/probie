@@ -1,0 +1,29 @@
+{
+  "name": "probie",
+  "version": "0.1.0",
+  "description": "Realtime endpoint connectivity monitor with notifications and egress info.",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/creeveliu/probie.git"
+  },
+  "bugs": {
+    "url": "https://github.com/creeveliu/probie/issues"
+  },
+  "homepage": "https://github.com/creeveliu/probie#readme",
+  "bin": {
+    "probie": "src/cli.js"
+  },
+  "scripts": {
+    "start": "node ./src/cli.js watch",
+    "check": "node --check ./src/cli.js"
+  },
+  "keywords": [
+    "connectivity",
+    "endpoint",
+    "network",
+    "monitor",
+    "watcher"
+  ],
+  "license": "MIT"
+}
