@@ -7,7 +7,7 @@ English: [README.md](./README.md)
 ## 安装
 
 ```bash
-npm install -g probie
+npm install -g @rollpard/probie
 ```
 
 本地开发：

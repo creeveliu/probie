@@ -9,7 +9,7 @@ Probie helps you answer a simple question: when a tool keeps retrying, is the ta
 ## Install
 
 ```bash
-npm install -g probie
+npm install -g @rollpard/probie
 ```
 
 For local development:

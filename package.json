@@ -1,5 +1,5 @@
 {
-  "name": "probie",
+  "name": "@rollpard/probie",
   "version": "0.1.0",
   "description": "Realtime endpoint connectivity monitor with notifications and egress info.",
   "type": "module",
